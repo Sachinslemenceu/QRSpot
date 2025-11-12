@@ -1,33 +1,20 @@
-package com.example.qrspot.features.qr.ui.home
+package com.example.qrspot.features.qr_scanner.ui.home
 
-import android.media.Image
+import android.Manifest
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,23 +28,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.qrspot.R
-import com.example.qrspot.features.qr.ui.home.composables.BottomAppBarWithDockedCentreButton
-import com.example.qrspot.features.qr.ui.home.composables.BottomBarWithCutoutShape
 import com.example.qrspot.features.qr.ui.home.composables.CameraPreviewContent
-import com.example.qrspot.features.qr.ui.home.composables.CustomBottomNavBar
-import com.example.qrspot.features.qr.ui.home.HomeScreenViewModel
-import com.example.qrspot.features.qr.ui.home.composables.TopBarComponent
-import com.example.qrspot.ui.theme.darkGrey500
+import com.example.qrspot.features.qr_scanner.ui.home.composables.CustomBottomNavBar
+import com.example.qrspot.features.qr_scanner.ui.home.composables.TopBarComponent
 import com.example.qrspot.ui.theme.yellow500
-import com.example.qrspot.ui.theme.yellow900
 import com.example.qrspot.util.permissions.PermissionManager
 
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel,
-    modifier: Modifier = Modifier
+    onQrCodeScanned: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var hasPermission by remember { mutableStateOf(false) }
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -69,7 +51,7 @@ fun HomeScreen(
 
     LaunchedEffect(Unit) {
         if (!PermissionManager.checkIsCameraPermissionGranted(context)){
-            permissionLauncher.launch(android.Manifest.permission.CAMERA)
+            permissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
 
@@ -106,18 +88,29 @@ fun HomeScreen(
         floatingActionButtonPosition = FabPosition.Center,
     ) { innerPadding ->
         CameraPreviewContent(
-            viewModel
+            viewModel,
+            onQrCodeScanned = onQrCodeScanned
         )
         Column(
             modifier = Modifier
                 .padding(innerPadding)
         ) {
             TopBarComponent(
-                onOpenGallery = {},
+                onOpenGallery = {
+
+                },
                 onTurnOnFlash = {},
                 modifier = Modifier
                     .padding(horizontal = 120.dp, vertical = 15.dp)
             )
+            Spacer(Modifier.weight(1f))
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.scan_overlay_icon),
+                contentDescription = "Scan Overlay Icon",
+                tint = Color.Unspecified,
+                modifier = Modifier.padding(horizontal = 30.dp)
+            )
+            Spacer(Modifier.weight(1f))
         }
     }
 }

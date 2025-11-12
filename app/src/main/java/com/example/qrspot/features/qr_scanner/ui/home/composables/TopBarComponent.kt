@@ -1,11 +1,10 @@
-package com.example.qrspot.features.qr.ui.home.composables
+package com.example.qrspot.features.qr_scanner.ui.home.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -19,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.qrspot.R
 import com.example.qrspot.ui.theme.darkGrey500
-import com.example.qrspot.ui.theme.lightGrey300
 
 @Composable
 fun TopBarComponent(

@@ -1,4 +1,4 @@
-package com.example.qrspot.features.qr.ui.home.composables
+package com.example.qrspot.features.qr_scanner.ui.home.composables
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -42,7 +42,8 @@ fun CustomBottomNavBar(
             colors = CardDefaults.cardColors(containerColor = Color.Transparent),
             shape = BottomBarWithCutoutShape(
                 cornerRadius = 15.dp,
-                cutoutRadius = 40.dp),
+                cutoutRadius = 40.dp
+            ),
         ) {
             NavigationBar(containerColor = darkGrey500) {
                 NavigationBarItem(
