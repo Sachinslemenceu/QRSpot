@@ -1,8 +1,11 @@
 package com.example.qrspot.features.qr_scanner.ui.home
 
 import android.Manifest
+import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -34,6 +37,8 @@ import com.example.qrspot.features.qr_scanner.ui.home.composables.CustomBottomNa
 import com.example.qrspot.features.qr_scanner.ui.home.composables.TopBarComponent
 import com.example.qrspot.ui.theme.yellow500
 import com.example.qrspot.util.permissions.PermissionManager
+import com.google.mlkit.vision.common.InputImage
+import java.net.URI
 
 @Composable
 fun HomeScreen(
@@ -41,16 +46,36 @@ fun HomeScreen(
     onQrCodeScanned: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     var hasPermission by remember { mutableStateOf(false) }
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
-    ){isGranted ->
+    ) { isGranted ->
         hasPermission = true
     }
-    val context = LocalContext.current
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+    ) { uri ->
+        selectedImageUri = uri
+        selectedImageUri?.let { imageUri ->
+            val inputImage = InputImage.fromFilePath(context, imageUri)
+            viewModel.extractQrCodeFromImage(
+                inputImage,
+                onQrCodeScanned = {
+                    if (it == "") {
+                        Toast.makeText(context, "No QR Code Found", Toast.LENGTH_SHORT).show()
+                    } else {
+                        onQrCodeScanned(it)
+                    }
+                }
+            )
+        }
+        Log.d("HomeScreen", "Selected image URI: $selectedImageUri")
+    }
 
     LaunchedEffect(Unit) {
-        if (!PermissionManager.checkIsCameraPermissionGranted(context)){
+        if (!PermissionManager.checkIsCameraPermissionGranted(context)) {
             permissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
@@ -58,10 +83,10 @@ fun HomeScreen(
     Scaffold(
         bottomBar = {
 
-                CustomBottomNavBar(
-                    onGenerateClicked = {},
-                    onHistoryClicked = {}
-                )
+            CustomBottomNavBar(
+                onGenerateClicked = {},
+                onHistoryClicked = {}
+            )
 
         },
         floatingActionButton = {
@@ -97,7 +122,9 @@ fun HomeScreen(
         ) {
             TopBarComponent(
                 onOpenGallery = {
-
+                    photoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
                 },
                 onTurnOnFlash = {},
                 modifier = Modifier

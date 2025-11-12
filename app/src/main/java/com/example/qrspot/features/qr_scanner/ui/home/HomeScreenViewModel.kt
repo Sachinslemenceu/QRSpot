@@ -62,6 +62,12 @@ class HomeScreenViewModel : ViewModel() {
             processCameraProvider.unbindAll()
         }
     }
+    fun extractQrCodeFromImage(
+        image: InputImage,
+        onQrCodeScanned: (String) -> Unit
+    ){
+        processImage(barcodeScanner, image, onQrCodeScanned)
+    }
 
 
     @OptIn(ExperimentalGetImage::class)
@@ -90,6 +96,28 @@ class HomeScreenViewModel : ViewModel() {
         } else {
             imageProxy.close()
         }
+    }
+
+    private fun processImage(
+        barcodeScanner: BarcodeScanner,
+        inputImage: InputImage,
+        onQrCodeScanned: (String) -> Unit
+    ){
+        barcodeScanner.process(inputImage)
+            .addOnSuccessListener { barcodes ->
+                if (barcodes.isEmpty()) {
+                    Log.d("ImageExtract", "No QR codes found")
+                    onQrCodeScanned("")
+                }
+                for (barcode in barcodes) {
+                    barcode.rawValue?.let { value ->
+                        onQrCodeScanned(value)
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("ImageExtract", "Error scanning QR: ${e.message}")
+            }
     }
 
 }
