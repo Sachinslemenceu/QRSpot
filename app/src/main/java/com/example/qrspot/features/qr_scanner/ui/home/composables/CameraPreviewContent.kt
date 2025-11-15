@@ -1,4 +1,4 @@
-package com.example.qrspot.features.qr.ui.home.composables
+package com.example.qrspot.features.qr_scanner.ui.home.composables
 
 import androidx.camera.compose.CameraXViewfinder
 import androidx.compose.runtime.Composable

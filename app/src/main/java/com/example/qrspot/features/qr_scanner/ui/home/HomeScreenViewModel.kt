@@ -14,15 +14,24 @@ import androidx.camera.lifecycle.awaitInstance
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.qrspot.features.qr_scanner.domain.models.QrCode
+import com.example.qrspot.features.qr_scanner.domain.models.QrCodeCategory
+import com.example.qrspot.features.qr_scanner.domain.repositories.HistoryRepository
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
-class HomeScreenViewModel : ViewModel() {
+class HomeScreenViewModel(
+    private val repository: HistoryRepository
+) : ViewModel() {
     private val _surfaceRequest = MutableStateFlow<SurfaceRequest?>(null)
     val surfaceRequest = _surfaceRequest.asStateFlow()
 
@@ -118,6 +127,20 @@ class HomeScreenViewModel : ViewModel() {
             .addOnFailureListener { e ->
                 Log.e("ImageExtract", "Error scanning QR: ${e.message}")
             }
+    }
+
+    fun saveQrCode(scannedText: String){
+        val time = LocalDateTime.now()
+        val type = if (scannedText.contains("http")) "link" else "text"
+        viewModelScope.launch(Dispatchers.IO) {
+            val qrCode = QrCode(
+                text = scannedText,
+                time = time,
+                type = type,
+                category = QrCodeCategory.Scanned
+            )
+            repository.saveQrCode(qrCode)
+        }
     }
 
 }

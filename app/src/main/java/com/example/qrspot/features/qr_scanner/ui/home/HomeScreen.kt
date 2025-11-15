@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,18 +33,20 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.qrspot.R
-import com.example.qrspot.features.qr.ui.home.composables.CameraPreviewContent
+import com.example.qrspot.features.qr_scanner.ui.home.composables.CameraPreviewContent
 import com.example.qrspot.features.qr_scanner.ui.home.composables.CustomBottomNavBar
 import com.example.qrspot.features.qr_scanner.ui.home.composables.TopBarComponent
 import com.example.qrspot.ui.theme.yellow500
 import com.example.qrspot.util.permissions.PermissionManager
 import com.google.mlkit.vision.common.InputImage
-import java.net.URI
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel,
     onQrCodeScanned: (String) -> Unit,
+    onGenerateClicked: () -> Unit,
+    onHistoryClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -53,6 +56,7 @@ fun HomeScreen(
     ) { isGranted ->
         hasPermission = true
     }
+    val scope = rememberCoroutineScope()
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
@@ -66,7 +70,10 @@ fun HomeScreen(
                     if (it == "") {
                         Toast.makeText(context, "No QR Code Found", Toast.LENGTH_SHORT).show()
                     } else {
-                        onQrCodeScanned(it)
+                        scope.launch {
+                            viewModel.saveQrCode(it)
+                            onQrCodeScanned(it)
+                        }
                     }
                 }
             )
@@ -84,8 +91,8 @@ fun HomeScreen(
         bottomBar = {
 
             CustomBottomNavBar(
-                onGenerateClicked = {},
-                onHistoryClicked = {}
+                onGenerateClicked = onGenerateClicked,
+                onHistoryClicked = onHistoryClicked
             )
 
         },
@@ -114,10 +121,13 @@ fun HomeScreen(
     ) { innerPadding ->
         CameraPreviewContent(
             viewModel,
-            onQrCodeScanned = onQrCodeScanned
+            onQrCodeScanned = {
+                viewModel.saveQrCode(it)
+                onQrCodeScanned(it)
+            }
         )
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .padding(innerPadding)
         ) {
             TopBarComponent(

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("org.jetbrains.kotlin.plugin.serialization") // For type-safe navigation
+    alias(libs.plugins.realm.kotlin) // Apply the Realm plugin here
 }
 
 android {
@@ -76,6 +77,11 @@ dependencies {
 
 //    For QR Code Generation
     implementation(libs.compose.qr.code)
-
+//  For Datastore to store local preferences
     implementation(libs.androidx.datastore.preferences)
+
+
+//  For Realm Db
+    implementation(libs.kotlin.library.base)
+
 }

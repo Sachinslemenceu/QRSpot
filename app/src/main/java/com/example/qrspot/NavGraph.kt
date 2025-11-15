@@ -2,10 +2,14 @@ package com.example.qrspot
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.qrspot.features.qr_scanner.domain.models.QrCodeCategory
+import com.example.qrspot.features.qr_scanner.ui.history.HistoryScreen
+import com.example.qrspot.features.qr_scanner.ui.history.HistoryViewModel
 import com.example.qrspot.features.qr_scanner.ui.home.HomeScreen
 import com.example.qrspot.features.qr_scanner.ui.home.HomeScreenViewModel
 import com.example.qrspot.features.qr_scanner.ui.result.ResultScreen
@@ -44,7 +48,12 @@ fun NavGraph(modifier: Modifier = Modifier) {
                 viewModel,
                 onQrCodeScanned = {
                     navController.navigate(Result(it))
-                })
+                },
+                onHistoryClicked = {
+                    navController.navigate(History)
+                },
+                onGenerateClicked = {}
+            )
         }
         composable<Result> {
             val barcode = it.arguments?.getString("barcode")
@@ -58,6 +67,15 @@ fun NavGraph(modifier: Modifier = Modifier) {
                 )
             }
         }
+        composable<History> {
+            val viewModel: HistoryViewModel = koinViewModel()
+            viewModel.getHistory(
+                QrCodeCategory.Scanned
+            )
+            HistoryScreen(
+                uiState = viewModel.uiState.collectAsState().value
+            )
+        }
     }
 }
 
@@ -70,6 +88,8 @@ object Welcome
 
 @Serializable
 object Home
+@Serializable
+object History
 
 @Serializable
 class Result(val barcode: String)
