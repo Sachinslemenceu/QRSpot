@@ -18,9 +18,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.qrspot.R
 import com.example.qrspot.ui.theme.darkGrey500
+import com.example.qrspot.ui.theme.yellow500
 
 @Composable
 fun TopBarComponent(
+    isFlashOn: Boolean = false,
     onOpenGallery: () -> Unit,
     onTurnOnFlash: () -> Unit,
     modifier: Modifier = Modifier
@@ -54,7 +56,7 @@ fun TopBarComponent(
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.lightning_icon),
                 contentDescription = "Lightning Icon",
-                tint = Color.White,
+                tint = if (isFlashOn) yellow500 else Color.White,
                 modifier = Modifier
                     .clickable(
                         onClick = onTurnOnFlash

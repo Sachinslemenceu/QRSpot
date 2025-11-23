@@ -1,5 +1,6 @@
 package com.example.qrspot.features.qr_scanner.ui.home.composables
 
+import android.util.Log
 import androidx.camera.compose.CameraXViewfinder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,7 +20,6 @@ fun CameraPreviewContent(
     modifier: Modifier = Modifier
 ) {
 
-
     val surfaceRequest by viewModel.surfaceRequest.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
@@ -27,8 +27,9 @@ fun CameraPreviewContent(
         viewModel.bindToCamera(
             context.applicationContext,
             lifecycleOwner,
-            onQrCodeScanned = {
-                onQrCodeScanned(it)
+            onQrCodeScanned = { scannedText ->
+                Log.d("CameraPreciewLogs", "Scanned Text: $scannedText")
+                onQrCodeScanned(scannedText)
             })
     }
     surfaceRequest?.let { request ->

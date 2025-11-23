@@ -3,12 +3,14 @@ package com.example.qrspot.features.qr_scanner.ui.home
 import android.content.Context
 import android.util.Log
 import androidx.annotation.OptIn
+import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.core.SurfaceRequest
+import androidx.camera.core.TorchState
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.lifecycle.awaitInstance
 import androidx.core.content.ContextCompat
@@ -42,14 +44,20 @@ class HomeScreenViewModel(
             }
         }
 
+    private val _isFlashOn = MutableStateFlow(false)
+    val isFlashOn = _isFlashOn.asStateFlow()
+
     private val barcodeScanner = BarcodeScanning.getClient()
+
+    private var processCameraProvider: ProcessCameraProvider? = null
+    private var camera: Camera? = null
 
     suspend fun bindToCamera(
         appContext: Context,
         lifecycleOwner: LifecycleOwner,
         onQrCodeScanned: (barcode: String) -> Unit
     ) {
-        val processCameraProvider = ProcessCameraProvider.awaitInstance(appContext)
+        processCameraProvider = ProcessCameraProvider.awaitInstance(appContext)
         val analysis = ImageAnalysis.Builder()
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .build()
@@ -61,14 +69,16 @@ class HomeScreenViewModel(
                     }
                 )
             }
-        processCameraProvider.bindToLifecycle(
+        camera = processCameraProvider?.bindToLifecycle(
             lifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, cameraPreviewUseCase, analysis
         )
-
+        camera?.cameraInfo?.torchState?.observe(lifecycleOwner) { torchState ->
+            _isFlashOn.value = torchState == TorchState.ON
+        }
         try {
             awaitCancellation()
         } finally {
-            processCameraProvider.unbindAll()
+            processCameraProvider?.unbindAll()
         }
     }
     fun extractQrCodeFromImage(
@@ -127,6 +137,12 @@ class HomeScreenViewModel(
             .addOnFailureListener { e ->
                 Log.e("ImageExtract", "Error scanning QR: ${e.message}")
             }
+    }
+
+    fun turnFlashLightOnAndOff(){
+        if (camera?.cameraInfo?.hasFlashUnit() == true) {
+            camera?.cameraControl?.enableTorch(!_isFlashOn.value)
+        }
     }
 
     fun saveQrCode(scannedText: String){

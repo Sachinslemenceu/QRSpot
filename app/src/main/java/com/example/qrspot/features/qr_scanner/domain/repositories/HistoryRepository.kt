@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface HistoryRepository {
 
-    suspend fun getHistory(type: QrCodeCategory): Flow<List<QrCodeEntity>>
+    suspend fun getHistory(): Flow<List<QrCode>>
 
     suspend fun saveQrCode(qrCode: QrCode)
 

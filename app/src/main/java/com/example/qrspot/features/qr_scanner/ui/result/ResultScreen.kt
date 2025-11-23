@@ -56,13 +56,15 @@ import com.lightspark.composeqr.QrCodeView
 @Composable
 fun ResultScreen(
     scannedText: String,
+    category: String,
+    time: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     var showQrCode by remember { mutableStateOf(false) }
     Scaffold(
-        containerColor = lightGrey300.copy(alpha = 0.4f)
+        containerColor = darkGrey500.copy(alpha = 0.80f)
     ) { innerPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -129,12 +131,12 @@ fun ResultScreen(
                         Spacer(Modifier.width(15.dp))
                         Column() {
                             Text(
-                                text = "Scanned Qr",
+                                text = category,
                                 fontSize = 22.sp,
                                 color = lightGrey300
                             )
                             Text(
-                                text = "16 Dec 2022, 9:30 pm",
+                                text = time,
                                 fontSize = 13.sp,
                                 color = Color(0xFFA4A4A4)
                             )
@@ -239,6 +241,8 @@ fun ResultScreen(
 private fun ResultScreenPreview() {
     ResultScreen(
         scannedText = "https://www.google.com/",
+        category = "Scanned",
+        time = "19:0 dec tue",
         onBackClick = {}
     )
 }

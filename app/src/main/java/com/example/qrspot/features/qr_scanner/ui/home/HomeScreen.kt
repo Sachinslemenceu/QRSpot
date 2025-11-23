@@ -2,7 +2,6 @@ package com.example.qrspot.features.qr_scanner.ui.home
 
 import android.Manifest
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -20,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,6 +51,7 @@ fun HomeScreen(
 ) {
     val context = LocalContext.current
     var hasPermission by remember { mutableStateOf(false) }
+    var selectedItem by remember { mutableStateOf(2) }
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
     ) { isGranted ->
@@ -58,10 +59,16 @@ fun HomeScreen(
     }
     val scope = rememberCoroutineScope()
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var isQrCodeFound by remember { mutableStateOf(false) }
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
     ) { uri ->
-        selectedImageUri = uri
+        if (uri != null){
+            selectedImageUri = uri
+        }
+    }
+    val isFlashOn = viewModel.isFlashOn.collectAsState().value
+    LaunchedEffect(selectedImageUri) {
         selectedImageUri?.let { imageUri ->
             val inputImage = InputImage.fromFilePath(context, imageUri)
             viewModel.extractQrCodeFromImage(
@@ -78,7 +85,7 @@ fun HomeScreen(
                 }
             )
         }
-        Log.d("HomeScreen", "Selected image URI: $selectedImageUri")
+
     }
 
     LaunchedEffect(Unit) {
@@ -91,39 +98,50 @@ fun HomeScreen(
         bottomBar = {
 
             CustomBottomNavBar(
-                onGenerateClicked = onGenerateClicked,
-                onHistoryClicked = onHistoryClicked
+                selectedItem = selectedItem,
+                onGenerateClicked ={
+                    selectedItem = 2
+                  onGenerateClicked()
+                } ,
+                onHistoryClicked = {
+                    selectedItem = 1
+                    onHistoryClicked()
+                }
             )
 
         },
-        floatingActionButton = {
-            FloatingActionButton(
-                shape = CircleShape,
-                containerColor = yellow500,
-                elevation = FloatingActionButtonDefaults.elevation(
-                    defaultElevation = 10.dp
-                ),
-                onClick = {},
-                modifier = Modifier
-                    .offset(y = 70.dp)
-            ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.scan_icon),
-                    contentDescription = null,
-                    tint = Color.Unspecified,
-                    modifier = Modifier
-                        .padding(20.dp)
-                        .size(30.dp)
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.Center,
+//        floatingActionButton = {
+//            FloatingActionButton(
+//                shape = CircleShape,
+//                containerColor = yellow500,
+//                elevation = FloatingActionButtonDefaults.elevation(
+//                    defaultElevation = 10.dp
+//                ),
+//                onClick = {},
+//                modifier = Modifier
+//                    .offset(y = 70.dp)
+//            ) {
+//                Icon(
+//                    imageVector = ImageVector.vectorResource(R.drawable.scan_icon),
+//                    contentDescription = null,
+//                    tint = Color.Unspecified,
+//                    modifier = Modifier
+//                        .padding(20.dp)
+//                        .size(30.dp)
+//                )
+//            }
+//        },
+//        floatingActionButtonPosition = FabPosition.Center,
     ) { innerPadding ->
         CameraPreviewContent(
             viewModel,
             onQrCodeScanned = {
-                viewModel.saveQrCode(it)
-                onQrCodeScanned(it)
+                if (!isQrCodeFound){
+                    isQrCodeFound = true
+                    viewModel.saveQrCode(it)
+                    onQrCodeScanned(it)
+
+                }
             }
         )
         Column(
@@ -136,7 +154,10 @@ fun HomeScreen(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
                 },
-                onTurnOnFlash = {},
+                onTurnOnFlash = {
+                    viewModel.turnFlashLightOnAndOff()
+                },
+                isFlashOn = isFlashOn,
                 modifier = Modifier
                     .padding(horizontal = 120.dp, vertical = 15.dp)
             )

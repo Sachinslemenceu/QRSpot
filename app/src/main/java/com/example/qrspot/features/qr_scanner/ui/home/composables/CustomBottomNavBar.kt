@@ -2,6 +2,7 @@ package com.example.qrspot.features.qr_scanner.ui.home.composables
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,27 +30,24 @@ import com.example.qrspot.ui.theme.yellow900
 fun CustomBottomNavBar(
     onGenerateClicked: () -> Unit,
     onHistoryClicked: () -> Unit,
+    selectedItem: Int = 0,
     modifier: Modifier = Modifier
 ) {
-    var selectedItem by remember { mutableStateOf(0) }
 
     BottomAppBar(
         containerColor = Color.Transparent,
-        modifier = Modifier
+        modifier = modifier
             .padding(15.dp)
     ) {
         Card(
             colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-            shape = BottomBarWithCutoutShape(
-                cornerRadius = 15.dp,
-                cutoutRadius = 40.dp
-            ),
+            shape = RoundedCornerShape(10.dp),
         ) {
             NavigationBar(containerColor = darkGrey500) {
                 NavigationBarItem(
                     onClick = {
                         onGenerateClicked()
-                        selectedItem = 0
+//                        selectedItem = 0
                     },
                     selected = selectedItem == 0,
                     icon = {
@@ -74,7 +72,7 @@ fun CustomBottomNavBar(
                 NavigationBarItem(
                     onClick = {
                         onHistoryClicked()
-                        selectedItem = 1
+//                        selectedItem = 1
                     },
                     selected = selectedItem == 1,
                     icon = {
