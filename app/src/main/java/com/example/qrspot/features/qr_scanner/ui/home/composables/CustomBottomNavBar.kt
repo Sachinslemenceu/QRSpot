@@ -41,13 +41,18 @@ fun CustomBottomNavBar(
     ) {
         Card(
             colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-            shape = RoundedCornerShape(10.dp),
+            shape = BottomBarWithCutoutShape(
+                cornerRadius = 25.dp,
+                cutoutRadius = 40.dp
+            ),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 20.dp
+            )
         ) {
             NavigationBar(containerColor = darkGrey500) {
                 NavigationBarItem(
                     onClick = {
                         onGenerateClicked()
-//                        selectedItem = 0
                     },
                     selected = selectedItem == 0,
                     icon = {
@@ -72,7 +77,6 @@ fun CustomBottomNavBar(
                 NavigationBarItem(
                     onClick = {
                         onHistoryClicked()
-//                        selectedItem = 1
                     },
                     selected = selectedItem == 1,
                     icon = {

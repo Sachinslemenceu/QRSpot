@@ -14,6 +14,7 @@ libraryBaseVersion = "3.0.0"
 lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
 composeBom = "2024.09.00"
+lottieCompose = "6.7.1"
 navVersion = "2.9.5"
 koin = "3.4.0"
 materialIconsExtended = "1.4.0"
@@ -53,6 +54,7 @@ koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = 
 koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
 google-mlkit = {group = "com.google.mlkit", name = "barcode-scanning", version.ref = "mlkitVersion"}
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

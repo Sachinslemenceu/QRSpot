@@ -84,4 +84,7 @@ dependencies {
 //  For Realm Db
     implementation(libs.kotlin.library.base)
 
+//    Lottie Animation
+    implementation(libs.lottie.compose)
+
 }

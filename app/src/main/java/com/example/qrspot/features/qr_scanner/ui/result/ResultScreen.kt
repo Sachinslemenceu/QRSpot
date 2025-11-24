@@ -50,6 +50,7 @@ import com.example.qrspot.ui.theme.lightGrey300
 import com.example.qrspot.ui.theme.yellow500
 import androidx.core.net.toUri
 import com.example.qrspot.features.qr.ui.result.composables.ResultButton
+import com.example.qrspot.ui.theme.darkGrey300
 import com.lightspark.composeqr.QrCodeView
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,7 +65,7 @@ fun ResultScreen(
     val context = LocalContext.current
     var showQrCode by remember { mutableStateOf(false) }
     Scaffold(
-        containerColor = darkGrey500.copy(alpha = 0.80f)
+        containerColor = darkGrey300
     ) { innerPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
