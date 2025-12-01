@@ -2,6 +2,7 @@ package com.example.qrspot
 
 import android.app.Application
 import com.example.qrspot.core.database.models.QrCodeEntity
+import com.example.qrspot.core.database.models.SettingsEntity
 import com.example.qrspot.di.appModule
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
@@ -18,7 +19,8 @@ class MyApp: Application() {
         realm = Realm.open(
             configuration = RealmConfiguration.create(
                 schema = setOf(
-                    QrCodeEntity::class
+                    QrCodeEntity::class,
+                    SettingsEntity::class
                 )
             )
         )

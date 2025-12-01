@@ -1,5 +1,12 @@
 package com.example.qrspot.features.qr_scanner.ui.settings
 
+import android.Manifest
+import android.content.Context
+import android.media.SoundPool
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -26,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,18 +41,31 @@ import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.model.content.RectangleShape
 import com.example.qrspot.R
 import com.example.qrspot.features.qr_scanner.ui.settings.composables.SettingCard
+import com.example.qrspot.features.qr_scanner.ui.settings.models.SettingsType
 import com.example.qrspot.ui.theme.darkGrey300
 import com.example.qrspot.ui.theme.darkGrey500
 import com.example.qrspot.ui.theme.yellow500
 
 @Composable
 fun SettingsScreen(
+    uiState: SettingsUiState ,
     onBackClick: () -> Unit,
+    onEvent: (SettingsUiEvent) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
 
-    var isVibrationEnabled by remember { mutableStateOf(false) }
-    var isBeepEnabled by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+
+    val soundPool = SoundPool.Builder()
+        .setMaxStreams(1)
+        .build()
+    val soundId = soundPool.load(
+        context,
+        R.raw.pop_sound,
+        1
+    )
+    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
     Scaffold(
         containerColor = darkGrey300
     ) { innerPadding ->
@@ -86,20 +107,31 @@ fun SettingsScreen(
             SettingCard(
                 settingName = "Vibrate",
                 settingDescription = "Vibration when scan is done.",
-                isToggled = isVibrationEnabled,
+                isToggled = uiState.isVibrationEnabled,
                 icon = ImageVector.vectorResource(R.drawable.vibrate_icon),
-                onClick = {
-                    isVibrationEnabled = it
+                onClick = {isVibrationEnabled->
+                    onEvent(SettingsUiEvent.OnSettingsToggled(isVibrationEnabled, SettingsType.Vibration))
+                    if (isVibrationEnabled) {
+                        vibrator.vibrate(
+                            VibrationEffect.createOneShot(
+                                500,
+                                VibrationEffect.DEFAULT_AMPLITUDE
+                            )
+                        )
+                    }
                 }
             )
             Spacer(Modifier.height(15.dp))
             SettingCard(
                 settingName = "Beep",
                 settingDescription = "Beep when scan is done.",
-                isToggled = isBeepEnabled,
+                isToggled = uiState.isBeepEnabled,
                 icon = ImageVector.vectorResource(R.drawable.beep_icon),
-                onClick = {
-                    isBeepEnabled = it
+                onClick =  { isBeepEnabled->
+                    onEvent(SettingsUiEvent.OnSettingsToggled(isBeepEnabled, SettingsType.Beep))
+                    if (isBeepEnabled){
+                        soundPool.play(soundId,1f,1f,0,0,1f)
+                    }
                 }
             )
             Spacer(Modifier.height(40.dp))
@@ -152,6 +184,7 @@ fun SettingsScreen(
 @Composable
 private fun SettingsScreenPreview() {
     SettingsScreen(
+        uiState = SettingsUiState(),
         onBackClick = {}
     )
 }

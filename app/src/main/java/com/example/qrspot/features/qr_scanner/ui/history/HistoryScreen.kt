@@ -68,6 +68,7 @@ import org.koin.core.definition.indexKey
 fun HistoryScreen(
     uiState: HistoryUiState,
     onViewLink: (String, String, String) -> Unit,
+    onNavigateToSettings:() -> Unit = {},
     onEvent: (HistoryUiEvent) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -120,7 +121,7 @@ fun HistoryScreen(
                             color = darkGrey500,
                             shape = RoundedCornerShape(10.dp)
                         )
-                        .clickable(onClick = {})
+                        .clickable(onClick = onNavigateToSettings)
                         .padding(3.dp)
                         .size(40.dp)
                 ) {

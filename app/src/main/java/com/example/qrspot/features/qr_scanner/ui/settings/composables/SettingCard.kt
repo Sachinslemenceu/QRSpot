@@ -1,5 +1,6 @@
 package com.example.qrspot.features.qr_scanner.ui.settings.composables
 
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
