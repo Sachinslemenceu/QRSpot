@@ -40,6 +40,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.qrspot.core.database.models.SettingsEntity
 import com.example.qrspot.features.qr_generator.ui.genrate_qr.GenerateQrScreen
+import com.example.qrspot.features.qr_generator.ui.genrate_qr.GenerateQrViewModel
 import com.example.qrspot.features.qr_generator.ui.genrate_qr_menu.GenerateQrMenuScreen
 import com.example.qrspot.features.qr_generator.ui.genrate_qr_menu.models.GenerateQrMenuItem
 import com.example.qrspot.features.qr_scanner.ui.history.HistoryScreen
@@ -71,7 +72,7 @@ fun NavGraph(modifier: Modifier = Modifier) {
     val bottomNavRoutes = listOf(
         "com.example.qrspot.Home",
         "com.example.qrspot.History",
-        "com.example.qrspot.GenerateQr"
+        "com.example.qrspot.GenerateQrMenu"
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -383,6 +384,7 @@ fun NavGraph(modifier: Modifier = Modifier) {
 //                        )
 //                    }
                 ) {
+                    val viewModel: GenerateQrViewModel = koinViewModel()
                     val menuName = it.arguments?.getString("menuName")
                     menuName?.let {
                         GenerateQrScreen(
@@ -392,6 +394,8 @@ fun NavGraph(modifier: Modifier = Modifier) {
                             menuName = menuName,
                             sharedTransitionScope = this@SharedTransitionLayout,
                             animatedVisibilityScope = this,
+                            uiState = viewModel.uiState.collectAsState().value,
+                            onEvent = viewModel::onEvent,
                             modifier = Modifier
                         )
 

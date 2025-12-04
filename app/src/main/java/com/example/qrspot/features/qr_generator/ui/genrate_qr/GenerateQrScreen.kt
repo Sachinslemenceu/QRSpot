@@ -1,5 +1,6 @@
 package com.example.qrspot.features.qr_generator.ui.genrate_qr
 
+import android.content.Intent
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -36,17 +37,21 @@ import com.example.qrspot.features.qr_generator.ui.genrate_qr.composables.Busine
 import com.example.qrspot.features.qr_generator.ui.genrate_qr.composables.CommonGenerateCard
 import com.example.qrspot.features.qr_generator.ui.genrate_qr.composables.ContactGenerateCard
 import com.example.qrspot.features.qr_generator.ui.genrate_qr.composables.EventGenerateCard
+import com.example.qrspot.features.qr_generator.ui.genrate_qr.composables.ShowQrSection
 import com.example.qrspot.features.qr_generator.ui.genrate_qr.composables.WifiGenerateCard
 import com.example.qrspot.features.qr_generator.ui.genrate_qr.models.GenerateQrDetailItem
 import com.example.qrspot.ui.theme.darkGrey300
 import com.example.qrspot.ui.theme.darkGrey500
 import com.example.qrspot.ui.theme.yellow500
+import dev.shreyaspatil.capturable.controller.rememberCaptureController
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun GenerateQrScreen(
     onBackClick: () -> Unit,
     menuName: String,
+    uiState: GenerateQrScreenUiState,
+    onEvent: (GenerateQrScreenUiEvent) -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
@@ -129,138 +134,181 @@ fun GenerateQrScreen(
     Scaffold(
         containerColor = darkGrey300,
     ) { innerPadding ->
-        with(sharedTransitionScope) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .padding(innerPadding)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+        if (uiState.qrCode == null) {
+            with(sharedTransitionScope) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 20.dp)
+                        .padding(innerPadding)
                 ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .padding(horizontal = 15.dp)
-                            .background(
-                                color = darkGrey500,
-                                shape = RoundedCornerShape(10.dp)
-                            )
-                            .clickable(onClick = onBackClick)
-                            .padding(3.dp)
-                            .size(40.dp)
+                            .fillMaxWidth()
+                            .padding(vertical = 20.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowLeft,
-                            contentDescription = "Back",
-                            tint = yellow500
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .padding(horizontal = 15.dp)
+                                .background(
+                                    color = darkGrey500,
+                                    shape = RoundedCornerShape(10.dp)
+                                )
+                                .clickable(onClick = onBackClick)
+                                .padding(3.dp)
+                                .size(40.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowLeft,
+                                contentDescription = "Back",
+                                tint = yellow500
+                            )
+                        }
+                        Text(
+                            text = menuName,
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            modifier = Modifier
+                                .sharedElement(
+                                    sharedContentState = rememberSharedContentState(key = menuName),
+                                    animatedVisibilityScope = animatedVisibilityScope,
+                                    boundsTransform = { _, _ ->
+                                        tween(500)
+                                    }
+                                )
                         )
                     }
-                    Text(
-                        text = menuName,
-                        color = Color.White,
-                        fontSize = 20.sp,
-                        modifier = Modifier
-                            .sharedElement(
-                                sharedContentState = rememberSharedContentState(key = menuName),
+                    if (menu.isWifiMenu) {
+                        Spacer(Modifier.weight(0.3f))
+                        WifiGenerateCard(
+                            icon = menu.icon,
+                            menuName = menuName,
+                            onGenerateClicked = { network, password ->
+                                onEvent(GenerateQrScreenUiEvent.GenerateQrCodeFromWifiForm(network,password))
+                            },
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            sharedTransitionScope = sharedTransitionScope
+                        )
+                        Spacer(Modifier.weight(0.7f))
+                    } else if (menu.isEventMenu) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .verticalScroll(rememberScrollState())
+
+                        ) {
+                            Spacer(Modifier.height(40.dp))
+                            EventGenerateCard(
+                                icon = menu.icon,
+                                menuName = menuName,
+                                onGenerateClicked = { eventName, eventStart,eventEnd,eventLocation,description->
+                                    onEvent(GenerateQrScreenUiEvent.GenerateQrCodeFromEventFormContactForm(
+                                        eventName = eventName,
+                                        startDateTime = eventStart,
+                                        endDateTime = eventEnd,
+                                        eventLocation = eventLocation,
+                                        description
+                                    ))
+                                },
                                 animatedVisibilityScope = animatedVisibilityScope,
-                                boundsTransform = { _, _ ->
-                                    tween(500)
-                                }
+                                sharedTransitionScope = sharedTransitionScope
                             )
-                    )
-                }
-                if (menu.isWifiMenu) {
-                    Spacer(Modifier.weight(0.3f))
-                    WifiGenerateCard(
-                        icon = menu.icon,
-                        menuName = menuName,
-                        onGenerateClicked = { _, _ ->
+                            Spacer(Modifier.height(40.dp))
 
-                        },
-                        animatedVisibilityScope = animatedVisibilityScope,
-                        sharedTransitionScope = sharedTransitionScope
-                    )
-                    Spacer(Modifier.weight(0.7f))
-                } else if (menu.isEventMenu) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .verticalScroll(rememberScrollState())
+                        }
+                    } else if (menu.isContactMenu) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .verticalScroll(rememberScrollState())
 
-                    ) {
-                        Spacer(Modifier.height(40.dp))
-                        EventGenerateCard(
+                        ) {
+                            Spacer(Modifier.height(40.dp))
+                            ContactGenerateCard(
+                                icon = menu.icon,
+                                menuName = menuName,
+                                onGenerateClicked = { firstName, lastName, companyName, jobName, phone, email, website, address, city, country->
+                                    onEvent(GenerateQrScreenUiEvent.GenerateQrCodeFromContactForm(
+                                        firstName = firstName,
+                                        lastName = lastName,
+                                        company = companyName,
+                                        job = jobName,
+                                        phoneNumber = phone,
+                                        email = email,
+                                        website = website,
+                                        address = address,
+                                        city = city,
+                                        country = country
+                                    ))
+                                },
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                sharedTransitionScope = sharedTransitionScope
+                            )
+                            Spacer(Modifier.height(40.dp))
+
+                        }
+                    } else if (menu.isBusinessMenu) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .verticalScroll(rememberScrollState())
+
+                        ) {
+                            Spacer(Modifier.height(40.dp))
+                            BusinessGenerateCard(
+                                icon = menu.icon,
+                                menuName = menuName,
+                                onGenerateClicked = { companyName, industryName, phone, email, website, address, city, country->
+                                    onEvent(GenerateQrScreenUiEvent.GenerateQrCodeFromBusinessForm(
+                                        companyName = companyName,
+                                        industry = industryName,
+                                        phoneNumber = phone,
+                                        email = email,
+                                        website = website,
+                                        address = address,
+                                        city = city,
+                                        country = country
+                                    ))
+                                },
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                sharedTransitionScope = sharedTransitionScope
+                            )
+                            Spacer(Modifier.height(40.dp))
+
+                        }
+                    } else {
+                        Spacer(Modifier.weight(0.3f))
+                        CommonGenerateCard(
                             icon = menu.icon,
+                            fieldTitle = menu.fieldTitle ?: "Text",
+                            fieldLabel = menu.fieldLabel ?: "Enter Text",
                             menuName = menuName,
-                            onGenerateClicked = { _, _, _, _, _ -> },
+                            onGenerateClicked = {
+                                onEvent(GenerateQrScreenUiEvent.GenerateQrCodeFromText(it))
+                            },
                             animatedVisibilityScope = animatedVisibilityScope,
                             sharedTransitionScope = sharedTransitionScope
                         )
-                        Spacer(Modifier.height(40.dp))
-
+                        Spacer(Modifier.weight(0.7f))
                     }
-                } else if (menu.isContactMenu) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .verticalScroll(rememberScrollState())
 
-                    ) {
-                        Spacer(Modifier.height(40.dp))
-                        ContactGenerateCard(
-                            icon = menu.icon,
-                            menuName = menuName,
-                            onGenerateClicked = { _, _, _, _, _, _, _, _, _, _ -> },
-                            animatedVisibilityScope = animatedVisibilityScope,
-                            sharedTransitionScope = sharedTransitionScope
-                        )
-                        Spacer(Modifier.height(40.dp))
-
-                    }
-                } else if (menu.isBusinessMenu) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .verticalScroll(rememberScrollState())
-
-                    ) {
-                        Spacer(Modifier.height(40.dp))
-                        BusinessGenerateCard(
-                            icon = menu.icon,
-                            menuName = menuName,
-                            onGenerateClicked = { _, _, _, _, _, _, _, _ -> },
-                            animatedVisibilityScope = animatedVisibilityScope,
-                            sharedTransitionScope = sharedTransitionScope
-                        )
-                        Spacer(Modifier.height(40.dp))
-
-                    }
-                } else {
-                    Spacer(Modifier.weight(0.3f))
-                    CommonGenerateCard(
-                        icon = menu.icon,
-                        fieldTitle = menu.fieldTitle ?: "Text",
-                        fieldLabel = menu.fieldLabel ?: "Enter Text",
-                        menuName = menuName,
-                        onGenerateClicked = {},
-                        animatedVisibilityScope = animatedVisibilityScope,
-                        sharedTransitionScope = sharedTransitionScope
-                    )
-                    Spacer(Modifier.weight(0.7f))
                 }
 
             }
-
+        } else {
+            ShowQrSection(
+                qrCode = uiState.qrCode,
+                onBackClick = {
+                    onEvent(GenerateQrScreenUiEvent.OnBackClick)
+                },
+                modifier = Modifier
+                    .padding(innerPadding)
+            )
         }
-
-
     }
 }
 

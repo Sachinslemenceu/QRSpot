@@ -86,5 +86,9 @@ dependencies {
 
 //    Lottie Animation
     implementation(libs.lottie.compose)
+    implementation("dev.shreyaspatil:capturable:3.0.1")
+
+
+
 
 }

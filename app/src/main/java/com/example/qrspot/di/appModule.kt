@@ -1,5 +1,6 @@
 package com.example.qrspot.di
 
+import com.example.qrspot.features.qr_generator.ui.genrate_qr.GenerateQrViewModel
 import com.example.qrspot.features.qr_scanner.data.repositories.HistoryRepositoryImpl
 import com.example.qrspot.features.qr_scanner.domain.repositories.HistoryRepository
 import com.example.qrspot.features.qr_scanner.ui.history.HistoryViewModel
@@ -14,4 +15,5 @@ val appModule = module {
     viewModel { HomeScreenViewModel(get()) }
     viewModel { HistoryViewModel(get()) }
     viewModel { SettingsViewModel() }
+    viewModel { GenerateQrViewModel() }
 }

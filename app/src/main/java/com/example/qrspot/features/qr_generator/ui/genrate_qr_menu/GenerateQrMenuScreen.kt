@@ -36,6 +36,7 @@ import com.example.qrspot.features.qr_generator.ui.genrate_qr_menu.models.Genera
 import com.example.qrspot.ui.theme.darkGrey300
 import com.example.qrspot.ui.theme.darkGrey500
 import com.example.qrspot.ui.theme.yellow500
+import dev.shreyaspatil.capturable.controller.rememberCaptureController
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -96,6 +97,7 @@ fun GenerateQrMenuScreen(
             text = "Telephone"
         ),
     )
+
     Scaffold(
         containerColor = darkGrey300
     ) { innerPadding ->
