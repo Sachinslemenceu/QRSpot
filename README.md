@@ -39,7 +39,7 @@ In addition to scanning, QRSpot includes an in-app QR code generator that allows
 
 QRSpot follows a modern and scalable **MVVM architecture**, ensuring a clean separation of concerns and long-term maintainability.
 <p align="center">
-  <img src="assets/QrSpot-architecture.jpg" width="400"/>
+  <img src="assets/QrSpot-architecture.png" width="400"/>
  
 </p>
 
