@@ -8,6 +8,15 @@ Designed with simplicity and reliability in mind, QRSpot works fully **offline**
 
 ### ✨ Overview
 
+<p align="center">
+  <img src="assets/Screenshot_20260105_230713.jpg" width="260"/>
+  <img src="assets/Screenshot_20260105_230731.jpg" width="260"/>
+   <img src="assets/Screenshot_20260105_230738.jpg" width="260"/>
+  <img src="assets/Screenshot_20260105_230745.jpg" width="260"/>
+   <img src="assets/Screenshot_20260105_230759.jpg" width="260"/>
+  <img src="assets/Screenshot_20260105_230752.jpg" width="260"/>
+</p>
+
 QRSpot provides real-time camera-based scanning with continuous autofocus for reliable detection in various lighting conditions. The app safely interprets scanned content such as URLs, plain text, and contact information (vCard), and presents users with clear, context-aware actions like opening links, copying data, or sharing results.
 
 In addition to scanning, QRSpot includes an in-app QR code generator that allows users to create high-quality QR codes from text or URLs and instantly share or export them as images.
