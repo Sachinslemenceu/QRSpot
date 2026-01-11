@@ -9,12 +9,13 @@ Designed with simplicity and reliability in mind, QRSpot works fully **offline**
 ### ✨ Overview
 
 <p align="center">
-  <img src="assets/Screenshot_20260105_230713.jpg" width="260"/>
-  <img src="assets/Screenshot_20260105_230731.jpg" width="260"/>
-   <img src="assets/Screenshot_20260105_230738.jpg" width="260"/>
-  <img src="assets/Screenshot_20260105_230745.jpg" width="260"/>
-   <img src="assets/Screenshot_20260105_230759.jpg" width="260"/>
-  <img src="assets/Screenshot_20260105_230752.jpg" width="260"/>
+  <img width="2123" height="1473" alt="Frame" src="https://github.com/user-attachments/assets/4baffb78-0d73-48f3-becb-681edd11b9d4" />
+  <!-- <img src="assets/Screenshot_20260105_230713.jpg" width="260"/> -->
+  <!-- <img src="assets/Screenshot_20260105_230731.jpg" width="260"/> -->
+   <!-- <img src="assets/Screenshot_20260105_230738.jpg" width="260"/> -->
+  <!-- <img src="assets/Screenshot_20260105_230745.jpg" width="260"/> -->
+   <!-- <img src="assets/Screenshot_20260105_230759.jpg" width="260"/> -->
+  <!-- <img src="assets/Screenshot_20260105_230752.jpg" width="260"/> -->
 </p>
 
 QRSpot provides real-time camera-based scanning with continuous autofocus for reliable detection in various lighting conditions. The app safely interprets scanned content such as URLs, plain text, and contact information (vCard), and presents users with clear, context-aware actions like opening links, copying data, or sharing results.
