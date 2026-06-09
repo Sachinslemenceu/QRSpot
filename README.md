@@ -1,85 +1,161 @@
-## 📱 QRSpot
+# QRSpot
 
-**QRSpot** is a modern, lightweight, and privacy-focused Android application for scanning and generating QR codes and barcodes. Built entirely in **Kotlin** using the latest **AndroidX** and **Jetpack** libraries, the app delivers fast performance, accurate scanning, and a clean Material Design user experience.
+A modern Android application for QR code scanning, barcode scanning, and QR code generation, built with Kotlin and modern Android development practices.
 
-Designed with simplicity and reliability in mind, QRSpot works fully **offline** for its core functionality and processes all scans locally on the device, ensuring user privacy and data security.
+QRSpot combines real-time camera processing, local QR decoding, and QR generation capabilities into a lightweight, privacy-focused application that operates entirely on-device.
 
----
+<img width="1536" height="1024" alt="qr_spot_hero" src="https://github.com/user-attachments/assets/7ddd0e08-3427-4a90-af77-a17c4b341f4d" />
 
-### ✨ Overview
-
-<p align="center">
-  <img width="2123" height="1473" alt="Frame" src="https://github.com/user-attachments/assets/4baffb78-0d73-48f3-becb-681edd11b9d4" />
-  <!-- <img src="assets/Screenshot_20260105_230713.jpg" width="260"/> -->
-  <!-- <img src="assets/Screenshot_20260105_230731.jpg" width="260"/> -->
-   <!-- <img src="assets/Screenshot_20260105_230738.jpg" width="260"/> -->
-  <!-- <img src="assets/Screenshot_20260105_230745.jpg" width="260"/> -->
-   <!-- <img src="assets/Screenshot_20260105_230759.jpg" width="260"/> -->
-  <!-- <img src="assets/Screenshot_20260105_230752.jpg" width="260"/> -->
-</p>
-
-QRSpot provides real-time camera-based scanning with continuous autofocus for reliable detection in various lighting conditions. The app safely interprets scanned content such as URLs, plain text, and contact information (vCard), and presents users with clear, context-aware actions like opening links, copying data, or sharing results.
-
-In addition to scanning, QRSpot includes an in-app QR code generator that allows users to create high-quality QR codes from text or URLs and instantly share or export them as images.
 
 ---
 
-### 🚀 Key Features
+## Overview
 
-- ⚡ **Fast & accurate scanning** using the device camera  
-- 🔒 **Privacy-first & offline** — no network required for scanning or generation  
-- 🧾 **Smart payload handling** (links, text, vCard)  
-- 🖼️ **Built-in QR generator** with preview, share, and export options  
-- 🎨 **Clean Material UI** built with AndroidX components  
-- ⚙️ **Configurable settings** (flash control, camera selection, supported formats)  
-- 🗂️ Optional **scan & generation history**
+QRSpot provides a complete QR and barcode workflow, allowing users to scan, generate, store, and manage QR-based information through a clean and responsive Android interface.
 
----
+The application was designed with a focus on:
 
-### 🏗 Architecture & Tech
+* Fast QR code detection
+* Privacy-first processing
+* Offline functionality
+* Modern Android architecture
+* Reliable camera integration
 
-QRSpot follows a modern and scalable **MVVM architecture**, ensuring a clean separation of concerns and long-term maintainability.
-<p align="center">
-  <img src="assets/QrSpot-architecture.png" width="400"/>
- 
-</p>
-
-- **Language:** Kotlin  
-- **UI:** Material Design + AndroidX  
-- **Camera:** CameraX  
-- **QR Processing:** ZXing / ML Kit  
-- **Async:** Kotlin Coroutines & Flow  
-- **Architecture:** MVVM (ViewModel, StateFlow / LiveData)  
-
-Camera and decoding logic are isolated from the UI layer, improving testability and making the codebase easy to extend.
+All QR processing is performed locally on the device without requiring external services or internet connectivity.
 
 ---
 
-### 🔐 Privacy & Security
+## Key Features
 
-- No internet connection required for core features  
-- All QR processing is performed locally on the device  
-- No user data is collected or transmitted  
+### QR & Barcode Scanning
+
+Scan QR codes and supported barcode formats using real-time camera processing.
+
+### QR Code Generation
+
+Generate QR codes from text, URLs, and other supported content types.
+
+### Scan History
+
+Maintain a local history of generated and scanned QR codes for quick access.
+
+### Smart Content Handling
+
+Automatically identify and process:
+
+* URLs
+* Plain Text
+* Contact Information
+* QR Payload Data
+
+### Offline Operation
+
+Core application functionality works entirely without an internet connection.
+
+### Privacy-Focused Design
+
+All scanning and decoding operations are performed locally on the device.
 
 ---
 
-### 🎯 Use Cases
+## Technical Highlights
 
-- Everyday QR and barcode scanning  
-- Quickly generating QR codes for links or text  
-- Offline scanning in restricted or low-connectivity environments  
-- Reference implementation for modern Android development practices  
+### Android Development
+
+* Kotlin
+* Android SDK
+* AndroidX
+* Material Design
+
+### Camera & QR Processing
+
+* CameraX
+* ZXing
+* Real-Time Camera Processing
+* Continuous Auto Focus
+
+### Architecture
+
+* MVVM
+* StateFlow
+* Coroutines
+* Repository Pattern
+* Separation of Concerns
+
+### User Experience
+
+* Material UI
+* Responsive Layouts
+* Local Data Management
+* Smooth Camera Integration
 
 ---
 
-### 📌 Summary
+## Architecture
 
-QRSpot combines performance, simplicity, and privacy into a single, well-architected Android application. Whether used as a production-ready QR utility or as a learning reference for clean Android development with Kotlin and CameraX, QRSpot provides a solid and extensible foundation.
+QRSpot follows the MVVM architectural pattern to ensure maintainability, scalability, and clear separation between UI, business logic, and data handling.
+
+[INSERT ARCHITECTURE DIAGRAM]
+
+---
+
+## Privacy & Security
+
+QRSpot is designed with a privacy-first approach.
+
+* No cloud processing
+* No user tracking
+* No analytics collection
+* No data transmission for QR scanning
+* Local-only QR processing
 
 ---
 
-⭐ If you find this project useful, consider starring the repository!
+## Technology Stack
+
+| Category         | Technology                |
+| ---------------- | ------------------------- |
+| Language         | Kotlin                    |
+| UI               | AndroidX, Material Design |
+| Camera           | CameraX                   |
+| QR Processing    | ZXing                     |
+| Concurrency      | Kotlin Coroutines         |
+| State Management | StateFlow                 |
+| Architecture     | MVVM                      |
 
 ---
-Contact Repo owner:
-Sachinslemenceu For questions or collaboration: open an issue or PR in this repository
+
+## Use Cases
+
+* QR Code Scanning
+* Barcode Scanning
+* QR Code Generation
+* Offline Verification Workflows
+* Educational Android Development Reference
+
+---
+
+## Why QRSpot?
+
+QRSpot demonstrates practical experience in:
+
+* Android Application Development
+* CameraX Integration
+* Real-Time Camera Processing
+* QR & Barcode Decoding
+* Modern Android Architecture
+* Privacy-Focused Software Design
+
+---
+
+## Author
+
+Sachin Pradeep Singh
+
+Software Engineer focused on Android Development, Backend Systems, Real-Time Applications, and Product Engineering.
+
+---
+
+## License
+
+MIT License
